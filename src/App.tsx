@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './Styles/App.css';
-import {thumbsContainer,thumb,thumbInner,img } from './Styles/AppStyle'
+import { thumbsContainer, thumb, thumbInner, img, ParentBox, UploadBox, DragBox } from './Styles/AppStyle'
+import { Typography, Box, Button } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 interface CustomFile extends File {
   preview: string;
@@ -23,7 +25,6 @@ function App() {
     }
   });
 
-
   const thumbs = files.map(file => (
     <div style={thumb} key={file.name}>
       <div style={thumbInner}>
@@ -43,11 +44,12 @@ function App() {
     };
   }, [files]);
 
-  const filess = acceptedFiles.map(file => (
+  const fileInfo = acceptedFiles.map(file => (
     <li key={file.name}>
-      {file.name} - {file.size} bytes
+      The file name: {file.name} - with Size {file.size} bytes
     </li>
   ));
+
   const fileRejectionItems = fileRejections.map(({ file, errors }) => (
     <li key={file.name}>
       {file.name} - {file.size} bytes
@@ -60,26 +62,41 @@ function App() {
   ));
 
   return (
-    <section className="container">
-      <div {...getRootProps({ className: 'dropzone' })}>
+    // <section className="container">
+    <ParentBox component="section" className="container">
+      <Box {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
         {
           isDragActive ?
-            <div className='boxStyling'><h1>Drop the files here ... </h1>
-              <h4>Files</h4>
-              <ul>{filess}</ul>
-            </div> :
-            <button type="button" onClick={open}>Drag 'n' drop some files here, or click to select files</button>
+            <DragBox>
+              <Typography sx={{ marginTop: 15 }} variant="h6" component="h2">Drop the files here ...</Typography>
+            </DragBox> :
+            <UploadBox>
+              <Typography variant="h6">Drag 'n' drop files here or Click to browse File.</Typography>
+              <Button
+                sx={{ marginTop: 2 }}
+                type="button"
+                onClick={open}
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+              </Button>
+            </UploadBox>
         }
-      </div>
+      </Box>
       <aside style={thumbsContainer}>
         {thumbs}
+        {fileInfo}  
       </aside>
 
-      <h4>Rejected files</h4>
-      <ul>{fileRejectionItems}</ul>
+      {/* <Typography variant="h4" component="h2">
+        Rejected files
+      </Typography>
+      <ul>{fileRejectionItems}</ul> */}
 
-    </section>
+    </ParentBox>
+    // </section>
   );
 }
 

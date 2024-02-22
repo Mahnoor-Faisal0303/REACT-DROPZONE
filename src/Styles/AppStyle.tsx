@@ -1,28 +1,58 @@
+import styled from '@emotion/styled';
+import Box from '@mui/material/Box';
+
+export const ParentBox = styled(Box)({
+    display: "flex",
+    justifyContent:'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width:'auto',
+    padding: "20px",
+    margin: "50px auto ",
+});
+export const UploadBox = styled(Box)({
+    margin: "50px",
+    display:'flex',
+   flexDirection: 'column',
+    alignItems: 'center'
+});
+export const  DragBox = styled(Box)({
+    margin: "100px",
+    display:'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    border:"2px dashed black",
+    width:'700px',
+    height:'400px',
+});
+
 export const thumbsContainer: React.CSSProperties = {
     display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 16,
-  };
+    flexDirection: 'column',
+    margin:1,
+    alignItems: 'center',
+    textAlign:'center'
+};
 
 export const thumb: React.CSSProperties = {
-    display: 'inline-flex',
-    borderRadius: 2,
-    border: '1px solid #eaeaea',
-    marginBottom: 8,
-    marginRight: 8,
-    width: '100%',
-    height: '100%',
-    padding: 4,
+    display: 'flex',
+    border:'2px dashed black',
+    textAlign:'center',   
+    width:'400px',
+    height:'200px',
     boxSizing: 'border-box',
-  };
- export const thumbInner: React.CSSProperties = {
+    marginBottom:10,
+    justifyContent: 'center',
+};
+
+export const thumbInner: React.CSSProperties = {
     display: 'flex',
     minWidth: 0,
-    overflow: 'hidden'
-  };
-  export const img: React.CSSProperties = {
+    overflow: 'hidden',
+};
+
+export const img: React.CSSProperties = {
     display: 'block',
-    width: 'auto',
+    width: '100%',
     height: '100%'
-  };
+};
