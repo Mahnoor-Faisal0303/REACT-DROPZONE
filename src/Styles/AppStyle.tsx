@@ -28,21 +28,18 @@ export const  DragBox = styled(Box)({
 
 export const thumbsContainer: React.CSSProperties = {
     display: 'flex',
-    flexDirection: 'column',
+    flexFlow: 'row wrap',
     margin:1,
-    alignItems: 'center',
-    textAlign:'center'
+    justifyContent:'space-between',
+    textAlign:'center',
 };
-
 export const thumb: React.CSSProperties = {
-    display: 'flex',
-    border:'2px dashed black',
-    textAlign:'center',   
-    width:'400px',
-    height:'200px',
-    boxSizing: 'border-box',
-    marginBottom:10,
-    justifyContent: 'center',
+    display: 'flex',   
+    width:'200px',
+    height:'100px',
+    margin:10,
+   //justifyContent:"space-around",
+  // backgroundColor:'yellow'
 };
 
 export const thumbInner: React.CSSProperties = {

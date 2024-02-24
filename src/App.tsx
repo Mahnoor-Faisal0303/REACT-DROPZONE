@@ -2,41 +2,76 @@ import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './Styles/App.css';
 import { thumbsContainer, thumb, thumbInner, img, ParentBox, UploadBox, DragBox } from './Styles/AppStyle'
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Button, IconButton } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { FileIcon, defaultStyles, DefaultExtensionType } from 'react-file-icon';
+import ClearIcon from '@mui/icons-material/Clear';
+import uuid from 'react-uuid';
 
 interface CustomFile extends File {
+  key: string;
   preview: string;
 }
+function getExtension(filename: string) {
+  return filename.split('.').pop()
+}
 
-function App() {
+function isImage(extension: string) {
+  if (extension === "jpeg" || extension === "jpg" || extension === "png") {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+const App = () => {
   const [files, setFiles] = useState<CustomFile[]>([]);
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles, fileRejections, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     noClick: true,
     noKeyboard: true,
     onDrop: acceptedFiles => {
       setFiles(
         acceptedFiles.map(file =>
           Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          }) as CustomFile
+            preview: URL.createObjectURL(file),
+            key: uuid(),
+          }) as CustomFile,
         )
       );
     }
   });
 
-  const thumbs = files.map(file => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img
-          src={file.preview}
-          style={img}
-          alt={`Thumbnail of ${file.name}`}
-          onLoad={() => { URL.revokeObjectURL(file.preview) }}
-        />
+  const handleDelete = (key: string) => {
+    setFiles(prevFiles => prevFiles.filter(file => file.key !== key));
+  };
+
+  const thumbs = files.map((file) => {
+    return (
+      <div key={file.name}>
+        <div style={thumb}>
+          <div style={thumbInner}>
+            {(isImage(getExtension(file.name)!)) ?
+              <img
+                src={file.preview}
+                style={img}
+                alt={`Thumbnail of ${file.name}`}
+                onLoad={() => { URL.revokeObjectURL(file.preview) }}
+              /> :
+              <FileIcon extension={getExtension(file.name)} {...defaultStyles[getExtension(file.name) as DefaultExtensionType]} />
+            }
+            <IconButton sx={{ color: 'blue', height: '25px', width: '25px' }} aria-label="delete" size="small"
+              onClick={() => { handleDelete(file.key); }}>
+              <ClearIcon fontSize="large" />
+            </IconButton>
+          </div>
+        </div>
+        <Typography sx={{ color: 'blue', width: 200, }} variant="subtitle2" key={file.name}>
+          The file name: {file.name} - with Size {file.size} bytes
+        </Typography>
       </div>
-    </div>
-  ));
+    )
+  });
 
   useEffect(() => {
     return () => {
@@ -44,25 +79,7 @@ function App() {
     };
   }, [files]);
 
-  const fileInfo = acceptedFiles.map(file => (
-    <li key={file.name}>
-      The file name: {file.name} - with Size {file.size} bytes
-    </li>
-  ));
-
-  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-    <li key={file.name}>
-      {file.name} - {file.size} bytes
-      <ul>
-        {errors.map(e => (
-          <li key={e.code}>{e.message}</li>
-        ))}
-      </ul>
-    </li>
-  ));
-
   return (
-    // <section className="container">
     <ParentBox component="section" className="container">
       <Box {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
@@ -87,16 +104,8 @@ function App() {
       </Box>
       <aside style={thumbsContainer}>
         {thumbs}
-        {fileInfo}  
       </aside>
-
-      {/* <Typography variant="h4" component="h2">
-        Rejected files
-      </Typography>
-      <ul>{fileRejectionItems}</ul> */}
-
     </ParentBox>
-    // </section>
   );
 }
 
